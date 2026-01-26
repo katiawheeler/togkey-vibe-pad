@@ -1,34 +1,265 @@
-// Togkey Vibe - Raw HID Implementation
-// Additional HID functionality and display driver integration
+// Togkey Vibe - OLED Display Driver
+// Shows current mode in large text
 
 #include QMK_KEYBOARD_H
 #include "vibe_display.h"
 
-// This file provides additional raw HID functionality
-// The main HID handling is in keymap.c
-
-// Display buffer (if the macropad has a built-in display)
-#define DISPLAY_WIDTH 128
-#define DISPLAY_HEIGHT 32
-#define DISPLAY_LINES 4
-#define DISPLAY_CHARS_PER_LINE 21
-
-static char display_buffer[DISPLAY_LINES][DISPLAY_CHARS_PER_LINE + 1];
-static bool display_dirty = true;  // Flag to trigger refresh
-
-// Current mode/state for local display when host is disconnected
-static uint8_t current_mode = 0;  // 0=ask, 1=plan, 2=edits, 3=all
+// Current mode/state
+static uint8_t current_mode = 0;  // 0=ASK, 1=PLAN, 2=EDITS, 3=ALL
 static bool stt_enabled = false;
 static bool host_connected = false;
 static uint32_t last_host_message = 0;
+static bool display_dirty = true;
 
-// Connection timeout (ms) - show fallback display if no host messages
+// Connection timeout (ms)
 #define HOST_TIMEOUT 10000
 
-// Mode names for fallback display
+// Mode names
 static const char* mode_names[] = {"ASK", "PLAN", "EDITS", "ALL"};
 
-// Update host connection timestamp (call this when receiving any HID message)
+// Large 16x32 font bitmaps for mode display
+// Each character is 16 pixels wide, 32 pixels tall
+// Stored as columns, 4 bytes per column (32 bits height)
+
+static const uint8_t PROGMEM font_A[] = {
+    0x00, 0x00, 0xF0, 0xFF,  // col 0
+    0x00, 0x80, 0xFF, 0xFF,  // col 1
+    0x00, 0xE0, 0x1F, 0x00,  // col 2
+    0x00, 0xF8, 0x07, 0x00,  // col 3
+    0x00, 0xFC, 0x03, 0x00,  // col 4
+    0x00, 0x1F, 0x03, 0x00,  // col 5
+    0x80, 0x0F, 0x03, 0x00,  // col 6
+    0xC0, 0x07, 0x03, 0x00,  // col 7
+    0xC0, 0x07, 0x03, 0x00,  // col 8
+    0x80, 0x0F, 0x03, 0x00,  // col 9
+    0x00, 0x1F, 0x03, 0x00,  // col 10
+    0x00, 0xFC, 0x03, 0x00,  // col 11
+    0x00, 0xF8, 0x07, 0x00,  // col 12
+    0x00, 0xE0, 0x1F, 0x00,  // col 13
+    0x00, 0x80, 0xFF, 0xFF,  // col 14
+    0x00, 0x00, 0xF0, 0xFF,  // col 15
+};
+
+static const uint8_t PROGMEM font_S[] = {
+    0x00, 0x78, 0xC0, 0x01,  // col 0
+    0x00, 0xFE, 0xC0, 0x03,  // col 1
+    0x00, 0xFF, 0xC1, 0x07,  // col 2
+    0x80, 0xC7, 0x83, 0x07,  // col 3
+    0x80, 0x83, 0x83, 0x07,  // col 4
+    0xC0, 0x83, 0x07, 0x07,  // col 5
+    0xC0, 0x81, 0x07, 0x07,  // col 6
+    0xC0, 0x81, 0x07, 0x07,  // col 7
+    0xC0, 0x81, 0x07, 0x07,  // col 8
+    0xC0, 0x81, 0x07, 0x07,  // col 9
+    0xC0, 0xC1, 0x0F, 0x07,  // col 10
+    0xC0, 0xC1, 0x0F, 0x07,  // col 11
+    0x80, 0xC1, 0x1F, 0x03,  // col 12
+    0x80, 0xE1, 0xFD, 0x03,  // col 13
+    0x00, 0xF1, 0xF8, 0x01,  // col 14
+    0x00, 0x30, 0xF0, 0x00,  // col 15
+};
+
+static const uint8_t PROGMEM font_K[] = {
+    0xC0, 0xFF, 0xFF, 0x07,  // col 0
+    0xC0, 0xFF, 0xFF, 0x07,  // col 1
+    0x00, 0x00, 0x1E, 0x00,  // col 2
+    0x00, 0x00, 0x3F, 0x00,  // col 3
+    0x00, 0x80, 0x7F, 0x00,  // col 4
+    0x00, 0xC0, 0xF3, 0x00,  // col 5
+    0x00, 0xE0, 0xE1, 0x01,  // col 6
+    0x00, 0xF0, 0xC0, 0x03,  // col 7
+    0x00, 0x78, 0x80, 0x07,  // col 8
+    0x00, 0x3C, 0x00, 0x0F,  // col 9
+    0x00, 0x1E, 0x00, 0x1E,  // col 10
+    0x00, 0x0F, 0x00, 0x3C,  // col 11
+    0x80, 0x07, 0x00, 0x78,  // col 12
+    0xC0, 0x03, 0x00, 0xF0,  // col 13
+    0xC0, 0x01, 0x00, 0xE0,  // col 14
+    0x80, 0x00, 0x00, 0x40,  // col 15
+};
+
+static const uint8_t PROGMEM font_P[] = {
+    0xC0, 0xFF, 0xFF, 0x07,  // col 0
+    0xC0, 0xFF, 0xFF, 0x07,  // col 1
+    0xC0, 0x01, 0x06, 0x00,  // col 2
+    0xC0, 0x01, 0x06, 0x00,  // col 3
+    0xC0, 0x01, 0x06, 0x00,  // col 4
+    0xC0, 0x01, 0x06, 0x00,  // col 5
+    0xC0, 0x01, 0x06, 0x00,  // col 6
+    0xC0, 0x01, 0x06, 0x00,  // col 7
+    0xC0, 0x01, 0x06, 0x00,  // col 8
+    0xC0, 0x01, 0x07, 0x00,  // col 9
+    0xC0, 0x83, 0x07, 0x00,  // col 10
+    0x80, 0x83, 0x03, 0x00,  // col 11
+    0x80, 0xC7, 0x03, 0x00,  // col 12
+    0x00, 0xFF, 0x01, 0x00,  // col 13
+    0x00, 0xFE, 0x00, 0x00,  // col 14
+    0x00, 0x78, 0x00, 0x00,  // col 15
+};
+
+static const uint8_t PROGMEM font_L[] = {
+    0xC0, 0xFF, 0xFF, 0x07,  // col 0
+    0xC0, 0xFF, 0xFF, 0x07,  // col 1
+    0x00, 0x00, 0x00, 0x07,  // col 2
+    0x00, 0x00, 0x00, 0x07,  // col 3
+    0x00, 0x00, 0x00, 0x07,  // col 4
+    0x00, 0x00, 0x00, 0x07,  // col 5
+    0x00, 0x00, 0x00, 0x07,  // col 6
+    0x00, 0x00, 0x00, 0x07,  // col 7
+    0x00, 0x00, 0x00, 0x07,  // col 8
+    0x00, 0x00, 0x00, 0x07,  // col 9
+    0x00, 0x00, 0x00, 0x07,  // col 10
+    0x00, 0x00, 0x00, 0x07,  // col 11
+    0x00, 0x00, 0x00, 0x07,  // col 12
+    0x00, 0x00, 0x00, 0x07,  // col 13
+    0x00, 0x00, 0x00, 0x07,  // col 14
+    0x00, 0x00, 0x00, 0x07,  // col 15
+};
+
+static const uint8_t PROGMEM font_N[] = {
+    0xC0, 0xFF, 0xFF, 0x07,  // col 0
+    0xC0, 0xFF, 0xFF, 0x07,  // col 1
+    0x00, 0x07, 0x00, 0x00,  // col 2
+    0x00, 0x0E, 0x00, 0x00,  // col 3
+    0x00, 0x3C, 0x00, 0x00,  // col 4
+    0x00, 0x78, 0x00, 0x00,  // col 5
+    0x00, 0xF0, 0x00, 0x00,  // col 6
+    0x00, 0xE0, 0x01, 0x00,  // col 7
+    0x00, 0xC0, 0x03, 0x00,  // col 8
+    0x00, 0x80, 0x0F, 0x00,  // col 9
+    0x00, 0x00, 0x1E, 0x00,  // col 10
+    0x00, 0x00, 0x3C, 0x00,  // col 11
+    0x00, 0x00, 0xF8, 0x00,  // col 12
+    0x00, 0x00, 0xE0, 0x01,  // col 13
+    0xC0, 0xFF, 0xFF, 0x07,  // col 14
+    0xC0, 0xFF, 0xFF, 0x07,  // col 15
+};
+
+static const uint8_t PROGMEM font_E[] = {
+    0xC0, 0xFF, 0xFF, 0x07,  // col 0
+    0xC0, 0xFF, 0xFF, 0x07,  // col 1
+    0xC0, 0x81, 0x07, 0x07,  // col 2
+    0xC0, 0x81, 0x07, 0x07,  // col 3
+    0xC0, 0x81, 0x07, 0x07,  // col 4
+    0xC0, 0x81, 0x07, 0x07,  // col 5
+    0xC0, 0x81, 0x07, 0x07,  // col 6
+    0xC0, 0x81, 0x07, 0x07,  // col 7
+    0xC0, 0x81, 0x07, 0x07,  // col 8
+    0xC0, 0x81, 0x07, 0x07,  // col 9
+    0xC0, 0x81, 0x07, 0x07,  // col 10
+    0xC0, 0x81, 0x07, 0x07,  // col 11
+    0xC0, 0x01, 0x00, 0x07,  // col 12
+    0xC0, 0x01, 0x00, 0x07,  // col 13
+    0xC0, 0x01, 0x00, 0x07,  // col 14
+    0xC0, 0x01, 0x00, 0x07,  // col 15
+};
+
+static const uint8_t PROGMEM font_D[] = {
+    0xC0, 0xFF, 0xFF, 0x07,  // col 0
+    0xC0, 0xFF, 0xFF, 0x07,  // col 1
+    0xC0, 0x01, 0x00, 0x07,  // col 2
+    0xC0, 0x01, 0x00, 0x07,  // col 3
+    0xC0, 0x01, 0x00, 0x07,  // col 4
+    0xC0, 0x01, 0x00, 0x07,  // col 5
+    0xC0, 0x01, 0x00, 0x07,  // col 6
+    0xC0, 0x01, 0x00, 0x07,  // col 7
+    0xC0, 0x01, 0x00, 0x07,  // col 8
+    0x80, 0x03, 0x00, 0x07,  // col 9
+    0x80, 0x03, 0x80, 0x03,  // col 10
+    0x00, 0x07, 0xC0, 0x03,  // col 11
+    0x00, 0x1F, 0xF0, 0x01,  // col 12
+    0x00, 0xFE, 0xFF, 0x00,  // col 13
+    0x00, 0xFC, 0x7F, 0x00,  // col 14
+    0x00, 0xF0, 0x1F, 0x00,  // col 15
+};
+
+static const uint8_t PROGMEM font_I[] = {
+    0x00, 0x00, 0x00, 0x00,  // col 0
+    0x00, 0x00, 0x00, 0x00,  // col 1
+    0x00, 0x00, 0x00, 0x00,  // col 2
+    0x00, 0x00, 0x00, 0x00,  // col 3
+    0xC0, 0x01, 0x00, 0x07,  // col 4
+    0xC0, 0x01, 0x00, 0x07,  // col 5
+    0xC0, 0xFF, 0xFF, 0x07,  // col 6
+    0xC0, 0xFF, 0xFF, 0x07,  // col 7
+    0xC0, 0xFF, 0xFF, 0x07,  // col 8
+    0xC0, 0xFF, 0xFF, 0x07,  // col 9
+    0xC0, 0x01, 0x00, 0x07,  // col 10
+    0xC0, 0x01, 0x00, 0x07,  // col 11
+    0x00, 0x00, 0x00, 0x00,  // col 12
+    0x00, 0x00, 0x00, 0x00,  // col 13
+    0x00, 0x00, 0x00, 0x00,  // col 14
+    0x00, 0x00, 0x00, 0x00,  // col 15
+};
+
+static const uint8_t PROGMEM font_T[] = {
+    0xC0, 0x01, 0x00, 0x00,  // col 0
+    0xC0, 0x01, 0x00, 0x00,  // col 1
+    0xC0, 0x01, 0x00, 0x00,  // col 2
+    0xC0, 0x01, 0x00, 0x00,  // col 3
+    0xC0, 0x01, 0x00, 0x00,  // col 4
+    0xC0, 0x01, 0x00, 0x00,  // col 5
+    0xC0, 0xFF, 0xFF, 0x07,  // col 6
+    0xC0, 0xFF, 0xFF, 0x07,  // col 7
+    0xC0, 0xFF, 0xFF, 0x07,  // col 8
+    0xC0, 0xFF, 0xFF, 0x07,  // col 9
+    0xC0, 0x01, 0x00, 0x00,  // col 10
+    0xC0, 0x01, 0x00, 0x00,  // col 11
+    0xC0, 0x01, 0x00, 0x00,  // col 12
+    0xC0, 0x01, 0x00, 0x00,  // col 13
+    0xC0, 0x01, 0x00, 0x00,  // col 14
+    0xC0, 0x01, 0x00, 0x00,  // col 15
+};
+
+// Get font data for a character
+static const uint8_t* get_font_char(char c) {
+    switch (c) {
+        case 'A': return font_A;
+        case 'S': return font_S;
+        case 'K': return font_K;
+        case 'P': return font_P;
+        case 'L': return font_L;
+        case 'N': return font_N;
+        case 'E': return font_E;
+        case 'D': return font_D;
+        case 'I': return font_I;
+        case 'T': return font_T;
+        default: return NULL;
+    }
+}
+
+// Draw a large character at position
+static void draw_large_char(char c, uint8_t x_offset) {
+    const uint8_t* font = get_font_char(c);
+    if (font == NULL) return;
+
+    // Draw 16 columns, 4 bytes each (32 pixels tall)
+    for (uint8_t col = 0; col < 16; col++) {
+        uint8_t x = x_offset + col;
+        if (x >= 128) break;
+
+        // Each column has 4 bytes for 32 pixel height
+        for (uint8_t row = 0; row < 4; row++) {
+            uint8_t byte_idx = col * 4 + row;
+            uint8_t data = pgm_read_byte(&font[byte_idx]);
+            oled_write_raw_byte(data, (row * 128) + x);
+        }
+    }
+}
+
+// Draw mode name in large text, centered
+static void draw_large_mode(const char* mode) {
+    uint8_t len = strlen(mode);
+    uint8_t char_width = 18;  // 16 pixels + 2 spacing
+    uint8_t total_width = len * char_width - 2;  // No trailing space
+    uint8_t start_x = (128 - total_width) / 2;
+
+    for (uint8_t i = 0; i < len; i++) {
+        draw_large_char(mode[i], start_x + (i * char_width));
+    }
+}
+
+// Update host connection timestamp
 void display_mark_host_active(void) {
     last_host_message = timer_read32();
     if (!host_connected) {
@@ -49,14 +280,15 @@ bool display_is_host_connected(void) {
     return host_connected;
 }
 
-// Update local state from host commands
+// Update mode
 void display_set_mode(uint8_t mode) {
-    if (mode != current_mode) {
+    if (mode != current_mode && mode < 4) {
         current_mode = mode;
         display_dirty = true;
     }
 }
 
+// Update STT state
 void display_set_stt(bool enabled) {
     if (enabled != stt_enabled) {
         stt_enabled = enabled;
@@ -64,196 +296,73 @@ void display_set_stt(bool enabled) {
     }
 }
 
-// Render fallback display when host is disconnected
-static void render_fallback_display(void) {
-    char line_buf[DISPLAY_CHARS_PER_LINE + 1];
-
-    // Line 0: Title
-    display_set_line(0, "TOGKEY VIBE");
-
-    // Line 1: Current mode
-    snprintf(line_buf, sizeof(line_buf), "Mode: %s",
-             current_mode < 4 ? mode_names[current_mode] : "???");
-    display_set_line(1, line_buf);
-
-    // Line 2: STT status
-    snprintf(line_buf, sizeof(line_buf), "STT: %s",
-             stt_enabled ? "ON" : "OFF");
-    display_set_line(2, line_buf);
-
-    // Line 3: Connection status
-    display_set_line(3, "Waiting for host...");
-}
-
-// Icon definitions for OLED display
-// These would be used if the Togkey Pad Plus has an OLED
 #ifdef OLED_ENABLE
 
-// 8x8 pixel icons
-static const char PROGMEM icon_mic_on[] = {
-    0x18, 0x24, 0x24, 0x24, 0x24, 0x18, 0x08, 0x1C
-};
-
-static const char PROGMEM icon_mic_off[] = {
-    0x19, 0x26, 0x2C, 0x34, 0x64, 0x98, 0x08, 0x1C
-};
-
-static const char PROGMEM icon_brain[] = {
-    0x3C, 0x42, 0x99, 0xA5, 0xA5, 0x99, 0x42, 0x3C
-};
-
-static const char PROGMEM icon_check[] = {
-    0x00, 0x01, 0x02, 0x04, 0x88, 0x50, 0x20, 0x00
-};
-
-static const char PROGMEM icon_x[] = {
-    0x00, 0x41, 0x22, 0x14, 0x08, 0x14, 0x22, 0x41
-};
-
-static const char PROGMEM icon_lightning[] = {
-    0x04, 0x08, 0x10, 0x3E, 0x08, 0x10, 0x20, 0x00
-};
-
-static const char PROGMEM icon_clock[] = {
-    0x3C, 0x42, 0x91, 0x91, 0x8F, 0x81, 0x42, 0x3C
-};
-
-// OLED task
+// OLED task - runs every frame
 bool oled_task_user(void) {
-    // Check host connection and render fallback if disconnected
-    if (!display_is_host_connected()) {
-        render_fallback_display();
-    }
+    // Always check connection status
+    display_is_host_connected();
 
-    // Only redraw if dirty (optimization)
     if (display_dirty) {
         oled_clear();
-        for (int line = 0; line < DISPLAY_LINES; line++) {
-            oled_set_cursor(0, line);
-            oled_write(display_buffer[line], false);
-        }
+
+        // Draw the current mode in large text
+        const char* mode = mode_names[current_mode];
+        draw_large_mode(mode);
+
         display_dirty = false;
     }
+
     return false;
-}
-
-// Set display line
-void display_set_line(uint8_t line, const char *text) {
-    if (line < DISPLAY_LINES) {
-        // Only mark dirty if content actually changed
-        if (strncmp(display_buffer[line], text, DISPLAY_CHARS_PER_LINE) != 0) {
-            strncpy(display_buffer[line], text, DISPLAY_CHARS_PER_LINE);
-            display_buffer[line][DISPLAY_CHARS_PER_LINE] = '\0';
-            display_dirty = true;
-        }
-    }
-}
-
-// Draw icon at position
-void display_draw_icon(uint8_t icon_id, uint8_t x, uint8_t y) {
-    const char *icon = NULL;
-
-    switch (icon_id) {
-        case 0: icon = icon_mic_on; break;
-        case 1: icon = icon_mic_off; break;
-        case 2: icon = icon_brain; break;
-        case 3: icon = icon_check; break;
-        case 4: icon = icon_x; break;
-        case 5: icon = icon_lightning; break;
-        case 6: icon = icon_clock; break;
-    }
-
-    if (icon != NULL) {
-        oled_set_cursor(x, y);
-        oled_write_raw_P(icon, 8);
-    }
-}
-
-#else
-
-// No OLED - stub functions (still maintain buffer state for HID responses)
-void display_set_line(uint8_t line, const char *text) {
-    if (line < DISPLAY_LINES) {
-        if (strncmp(display_buffer[line], text, DISPLAY_CHARS_PER_LINE) != 0) {
-            strncpy(display_buffer[line], text, DISPLAY_CHARS_PER_LINE);
-            display_buffer[line][DISPLAY_CHARS_PER_LINE] = '\0';
-            display_dirty = true;
-        }
-    }
-}
-
-void display_draw_icon(uint8_t icon_id, uint8_t x, uint8_t y) {
-    // No-op without OLED
-    (void)icon_id;
-    (void)x;
-    (void)y;
-}
-
-// Periodic check for host timeout (call from matrix_scan_user in keymap.c)
-void display_check_connection(void) {
-    display_is_host_connected();
 }
 
 #endif
 
 // Initialize display
 void display_init(void) {
-    for (int i = 0; i < DISPLAY_LINES; i++) {
-        memset(display_buffer[i], ' ', DISPLAY_CHARS_PER_LINE);
-        display_buffer[i][DISPLAY_CHARS_PER_LINE] = '\0';
-    }
+    display_dirty = true;
+}
 
-    // Default display content
-    display_set_line(0, "TOGKEY VIBE");
-    display_set_line(1, "Connecting...");
-    display_set_line(2, "");
-    display_set_line(3, "");
+// Set display line (for host control - currently unused with big mode display)
+void display_set_line(uint8_t line, const char *text) {
+    // Mark host as active
+    display_mark_host_active();
+    display_dirty = true;
+}
+
+// Draw icon (stub - not used with big mode display)
+void display_draw_icon(uint8_t icon_id, uint8_t x, uint8_t y) {
+    (void)icon_id;
+    (void)x;
+    (void)y;
+}
+
+// Check connection (called from matrix_scan_user when OLED not enabled)
+void display_check_connection(void) {
+    display_is_host_connected();
 }
 
 // Extended raw HID handler for display commands
 void raw_hid_receive_display(uint8_t *data, uint8_t length) {
-    // Mark host as active on any display command
     display_mark_host_active();
 
     uint8_t cmd = data[0];
     uint8_t payload_len = data[1];
-    char *payload = (char *)&data[2];
+    uint8_t *payload = &data[2];
 
     switch (cmd) {
-        case 0x12: // Header line
-            display_set_line(0, payload);
-            break;
-        case 0x13: // Content line 1
-            display_set_line(1, payload);
-            break;
-        case 0x14: // Content line 2
-            display_set_line(2, payload);
-            break;
-        case 0x15: // Footer line
-            display_set_line(3, payload);
-            break;
-        case 0x16: // Full refresh
-            if (payload_len > 0) {
-                uint8_t chunk = (uint8_t)payload[0];
-                if (chunk < DISPLAY_LINES) {
-                    display_set_line(chunk, &payload[1]);
-                }
-            }
-            break;
-        case 0x17: // Icon
-            if (payload_len >= 3) {
-                display_draw_icon((uint8_t)payload[0], (uint8_t)payload[1], (uint8_t)payload[2]);
-            }
-            break;
-        case 0x18: // Set mode (for local state tracking)
+        case 0x18: // Set mode
             if (payload_len >= 1) {
-                display_set_mode((uint8_t)payload[0]);
+                display_set_mode(payload[0]);
             }
             break;
-        case 0x19: // Set STT state (for local state tracking)
+        case 0x19: // Set STT state
             if (payload_len >= 1) {
                 display_set_stt(payload[0] != 0);
             }
+            break;
+        default:
+            // Other display commands mark activity but we only show mode
             break;
     }
 }

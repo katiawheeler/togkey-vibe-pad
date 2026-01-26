@@ -86,3 +86,10 @@
 #define FIRMWARE_VERSION_MAJOR 1
 #define FIRMWARE_VERSION_MINOR 0
 #define FIRMWARE_VERSION_PATCH 0
+
+// ============================================================
+// OLED CONFIGURATION
+// ============================================================
+// Flip display 180 degrees (if screen appears upside down)
+#define OLED_DISPLAY_128X32
+#define OLED_ROTATION OLED_ROTATION_180

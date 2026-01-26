@@ -11,9 +11,9 @@ ENCODER_ENABLE = yes
 RGBLIGHT_ENABLE = yes
 # RGB_MATRIX_ENABLE = yes
 
-# Enable OLED display support (uncomment if your macropad has an OLED)
-# OLED_ENABLE = yes
-# OLED_DRIVER = ssd1306
+# Enable OLED display support
+OLED_ENABLE = yes
+OLED_DRIVER = ssd1306
 
 # Enable console for debugging (disable in production)
 CONSOLE_ENABLE = no
