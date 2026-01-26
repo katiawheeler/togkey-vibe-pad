@@ -1,0 +1,85 @@
+{
+  "": {
+    "dependencies": "/Users/katiawheeler/Desktop/mine/vibe/togkey-vibe/app/TogkeyVibe/.build/arm64-apple-macosx/release/TogkeyVibe.build/TogkeyVibe.d",
+    "object": "/Users/katiawheeler/Desktop/mine/vibe/togkey-vibe/app/TogkeyVibe/.build/arm64-apple-macosx/release/TogkeyVibe.build/TogkeyVibe.o",
+    "swift-dependencies": "/Users/katiawheeler/Desktop/mine/vibe/togkey-vibe/app/TogkeyVibe/.build/arm64-apple-macosx/release/TogkeyVibe.build/master.swiftdeps"
+  },
+  "/Users/katiawheeler/Desktop/mine/vibe/togkey-vibe/app/TogkeyVibe/App/AppDelegate.swift": {
+    "object": "/Users/katiawheeler/Desktop/mine/vibe/togkey-vibe/app/TogkeyVibe/.build/arm64-apple-macosx/release/TogkeyVibe.build/AppDelegate.swift.o",
+    "swiftmodule": "/Users/katiawheeler/Desktop/mine/vibe/togkey-vibe/app/TogkeyVibe/.build/arm64-apple-macosx/release/TogkeyVibe.build/AppDelegate~partial.swiftmodule",
+    "swift-dependencies": "/Users/katiawheeler/Desktop/mine/vibe/togkey-vibe/app/TogkeyVibe/.build/arm64-apple-macosx/release/TogkeyVibe.build/AppDelegate.swiftdeps",
+    "diagnostics": "/Users/katiawheeler/Desktop/mine/vibe/togkey-vibe/app/TogkeyVibe/.build/arm64-apple-macosx/release/TogkeyVibe.build/AppDelegate.dia"
+  },
+  "/Users/katiawheeler/Desktop/mine/vibe/togkey-vibe/app/TogkeyVibe/App/TogkeyVibeApp.swift": {
+    "object": "/Users/katiawheeler/Desktop/mine/vibe/togkey-vibe/app/TogkeyVibe/.build/arm64-apple-macosx/release/TogkeyVibe.build/TogkeyVibeApp.swift.o",
+    "swiftmodule": "/Users/katiawheeler/Desktop/mine/vibe/togkey-vibe/app/TogkeyVibe/.build/arm64-apple-macosx/release/TogkeyVibe.build/TogkeyVibeApp~partial.swiftmodule",
+    "swift-dependencies": "/Users/katiawheeler/Desktop/mine/vibe/togkey-vibe/app/TogkeyVibe/.build/arm64-apple-macosx/release/TogkeyVibe.build/TogkeyVibeApp.swiftdeps",
+    "diagnostics": "/Users/katiawheeler/Desktop/mine/vibe/togkey-vibe/app/TogkeyVibe/.build/arm64-apple-macosx/release/TogkeyVibe.build/TogkeyVibeApp.dia"
+  },
+  "/Users/katiawheeler/Desktop/mine/vibe/togkey-vibe/app/TogkeyVibe/Models/DeviceState.swift": {
+    "object": "/Users/katiawheeler/Desktop/mine/vibe/togkey-vibe/app/TogkeyVibe/.build/arm64-apple-macosx/release/TogkeyVibe.build/DeviceState.swift.o",
+    "swiftmodule": "/Users/katiawheeler/Desktop/mine/vibe/togkey-vibe/app/TogkeyVibe/.build/arm64-apple-macosx/release/TogkeyVibe.build/DeviceState~partial.swiftmodule",
+    "swift-dependencies": "/Users/katiawheeler/Desktop/mine/vibe/togkey-vibe/app/TogkeyVibe/.build/arm64-apple-macosx/release/TogkeyVibe.build/DeviceState.swiftdeps",
+    "diagnostics": "/Users/katiawheeler/Desktop/mine/vibe/togkey-vibe/app/TogkeyVibe/.build/arm64-apple-macosx/release/TogkeyVibe.build/DeviceState.dia"
+  },
+  "/Users/katiawheeler/Desktop/mine/vibe/togkey-vibe/app/TogkeyVibe/Models/ThinkLevel.swift": {
+    "object": "/Users/katiawheeler/Desktop/mine/vibe/togkey-vibe/app/TogkeyVibe/.build/arm64-apple-macosx/release/TogkeyVibe.build/ThinkLevel.swift.o",
+    "swiftmodule": "/Users/katiawheeler/Desktop/mine/vibe/togkey-vibe/app/TogkeyVibe/.build/arm64-apple-macosx/release/TogkeyVibe.build/ThinkLevel~partial.swiftmodule",
+    "swift-dependencies": "/Users/katiawheeler/Desktop/mine/vibe/togkey-vibe/app/TogkeyVibe/.build/arm64-apple-macosx/release/TogkeyVibe.build/ThinkLevel.swiftdeps",
+    "diagnostics": "/Users/katiawheeler/Desktop/mine/vibe/togkey-vibe/app/TogkeyVibe/.build/arm64-apple-macosx/release/TogkeyVibe.build/ThinkLevel.dia"
+  },
+  "/Users/katiawheeler/Desktop/mine/vibe/togkey-vibe/app/TogkeyVibe/Models/VibeMode.swift": {
+    "object": "/Users/katiawheeler/Desktop/mine/vibe/togkey-vibe/app/TogkeyVibe/.build/arm64-apple-macosx/release/TogkeyVibe.build/VibeMode.swift.o",
+    "swiftmodule": "/Users/katiawheeler/Desktop/mine/vibe/togkey-vibe/app/TogkeyVibe/.build/arm64-apple-macosx/release/TogkeyVibe.build/VibeMode~partial.swiftmodule",
+    "swift-dependencies": "/Users/katiawheeler/Desktop/mine/vibe/togkey-vibe/app/TogkeyVibe/.build/arm64-apple-macosx/release/TogkeyVibe.build/VibeMode.swiftdeps",
+    "diagnostics": "/Users/katiawheeler/Desktop/mine/vibe/togkey-vibe/app/TogkeyVibe/.build/arm64-apple-macosx/release/TogkeyVibe.build/VibeMode.dia"
+  },
+  "/Users/katiawheeler/Desktop/mine/vibe/togkey-vibe/app/TogkeyVibe/Services/ClaudeCodeBridge.swift": {
+    "object": "/Users/katiawheeler/Desktop/mine/vibe/togkey-vibe/app/TogkeyVibe/.build/arm64-apple-macosx/release/TogkeyVibe.build/ClaudeCodeBridge.swift.o",
+    "swiftmodule": "/Users/katiawheeler/Desktop/mine/vibe/togkey-vibe/app/TogkeyVibe/.build/arm64-apple-macosx/release/TogkeyVibe.build/ClaudeCodeBridge~partial.swiftmodule",
+    "swift-dependencies": "/Users/katiawheeler/Desktop/mine/vibe/togkey-vibe/app/TogkeyVibe/.build/arm64-apple-macosx/release/TogkeyVibe.build/ClaudeCodeBridge.swiftdeps",
+    "diagnostics": "/Users/katiawheeler/Desktop/mine/vibe/togkey-vibe/app/TogkeyVibe/.build/arm64-apple-macosx/release/TogkeyVibe.build/ClaudeCodeBridge.dia"
+  },
+  "/Users/katiawheeler/Desktop/mine/vibe/togkey-vibe/app/TogkeyVibe/Services/DisplayRenderer.swift": {
+    "object": "/Users/katiawheeler/Desktop/mine/vibe/togkey-vibe/app/TogkeyVibe/.build/arm64-apple-macosx/release/TogkeyVibe.build/DisplayRenderer.swift.o",
+    "swiftmodule": "/Users/katiawheeler/Desktop/mine/vibe/togkey-vibe/app/TogkeyVibe/.build/arm64-apple-macosx/release/TogkeyVibe.build/DisplayRenderer~partial.swiftmodule",
+    "swift-dependencies": "/Users/katiawheeler/Desktop/mine/vibe/togkey-vibe/app/TogkeyVibe/.build/arm64-apple-macosx/release/TogkeyVibe.build/DisplayRenderer.swiftdeps",
+    "diagnostics": "/Users/katiawheeler/Desktop/mine/vibe/togkey-vibe/app/TogkeyVibe/.build/arm64-apple-macosx/release/TogkeyVibe.build/DisplayRenderer.dia"
+  },
+  "/Users/katiawheeler/Desktop/mine/vibe/togkey-vibe/app/TogkeyVibe/Services/HIDManager.swift": {
+    "object": "/Users/katiawheeler/Desktop/mine/vibe/togkey-vibe/app/TogkeyVibe/.build/arm64-apple-macosx/release/TogkeyVibe.build/HIDManager.swift.o",
+    "swiftmodule": "/Users/katiawheeler/Desktop/mine/vibe/togkey-vibe/app/TogkeyVibe/.build/arm64-apple-macosx/release/TogkeyVibe.build/HIDManager~partial.swiftmodule",
+    "swift-dependencies": "/Users/katiawheeler/Desktop/mine/vibe/togkey-vibe/app/TogkeyVibe/.build/arm64-apple-macosx/release/TogkeyVibe.build/HIDManager.swiftdeps",
+    "diagnostics": "/Users/katiawheeler/Desktop/mine/vibe/togkey-vibe/app/TogkeyVibe/.build/arm64-apple-macosx/release/TogkeyVibe.build/HIDManager.dia"
+  },
+  "/Users/katiawheeler/Desktop/mine/vibe/togkey-vibe/app/TogkeyVibe/Services/LEDController.swift": {
+    "object": "/Users/katiawheeler/Desktop/mine/vibe/togkey-vibe/app/TogkeyVibe/.build/arm64-apple-macosx/release/TogkeyVibe.build/LEDController.swift.o",
+    "swiftmodule": "/Users/katiawheeler/Desktop/mine/vibe/togkey-vibe/app/TogkeyVibe/.build/arm64-apple-macosx/release/TogkeyVibe.build/LEDController~partial.swiftmodule",
+    "swift-dependencies": "/Users/katiawheeler/Desktop/mine/vibe/togkey-vibe/app/TogkeyVibe/.build/arm64-apple-macosx/release/TogkeyVibe.build/LEDController.swiftdeps",
+    "diagnostics": "/Users/katiawheeler/Desktop/mine/vibe/togkey-vibe/app/TogkeyVibe/.build/arm64-apple-macosx/release/TogkeyVibe.build/LEDController.dia"
+  },
+  "/Users/katiawheeler/Desktop/mine/vibe/togkey-vibe/app/TogkeyVibe/Services/LaunchAtLoginService.swift": {
+    "object": "/Users/katiawheeler/Desktop/mine/vibe/togkey-vibe/app/TogkeyVibe/.build/arm64-apple-macosx/release/TogkeyVibe.build/LaunchAtLoginService.swift.o",
+    "swiftmodule": "/Users/katiawheeler/Desktop/mine/vibe/togkey-vibe/app/TogkeyVibe/.build/arm64-apple-macosx/release/TogkeyVibe.build/LaunchAtLoginService~partial.swiftmodule",
+    "swift-dependencies": "/Users/katiawheeler/Desktop/mine/vibe/togkey-vibe/app/TogkeyVibe/.build/arm64-apple-macosx/release/TogkeyVibe.build/LaunchAtLoginService.swiftdeps",
+    "diagnostics": "/Users/katiawheeler/Desktop/mine/vibe/togkey-vibe/app/TogkeyVibe/.build/arm64-apple-macosx/release/TogkeyVibe.build/LaunchAtLoginService.dia"
+  },
+  "/Users/katiawheeler/Desktop/mine/vibe/togkey-vibe/app/TogkeyVibe/Services/VoiceModeService.swift": {
+    "object": "/Users/katiawheeler/Desktop/mine/vibe/togkey-vibe/app/TogkeyVibe/.build/arm64-apple-macosx/release/TogkeyVibe.build/VoiceModeService.swift.o",
+    "swiftmodule": "/Users/katiawheeler/Desktop/mine/vibe/togkey-vibe/app/TogkeyVibe/.build/arm64-apple-macosx/release/TogkeyVibe.build/VoiceModeService~partial.swiftmodule",
+    "swift-dependencies": "/Users/katiawheeler/Desktop/mine/vibe/togkey-vibe/app/TogkeyVibe/.build/arm64-apple-macosx/release/TogkeyVibe.build/VoiceModeService.swiftdeps",
+    "diagnostics": "/Users/katiawheeler/Desktop/mine/vibe/togkey-vibe/app/TogkeyVibe/.build/arm64-apple-macosx/release/TogkeyVibe.build/VoiceModeService.dia"
+  },
+  "/Users/katiawheeler/Desktop/mine/vibe/togkey-vibe/app/TogkeyVibe/Views/MenuBarView.swift": {
+    "object": "/Users/katiawheeler/Desktop/mine/vibe/togkey-vibe/app/TogkeyVibe/.build/arm64-apple-macosx/release/TogkeyVibe.build/MenuBarView.swift.o",
+    "swiftmodule": "/Users/katiawheeler/Desktop/mine/vibe/togkey-vibe/app/TogkeyVibe/.build/arm64-apple-macosx/release/TogkeyVibe.build/MenuBarView~partial.swiftmodule",
+    "swift-dependencies": "/Users/katiawheeler/Desktop/mine/vibe/togkey-vibe/app/TogkeyVibe/.build/arm64-apple-macosx/release/TogkeyVibe.build/MenuBarView.swiftdeps",
+    "diagnostics": "/Users/katiawheeler/Desktop/mine/vibe/togkey-vibe/app/TogkeyVibe/.build/arm64-apple-macosx/release/TogkeyVibe.build/MenuBarView.dia"
+  },
+  "/Users/katiawheeler/Desktop/mine/vibe/togkey-vibe/app/TogkeyVibe/Views/SettingsView.swift": {
+    "object": "/Users/katiawheeler/Desktop/mine/vibe/togkey-vibe/app/TogkeyVibe/.build/arm64-apple-macosx/release/TogkeyVibe.build/SettingsView.swift.o",
+    "swiftmodule": "/Users/katiawheeler/Desktop/mine/vibe/togkey-vibe/app/TogkeyVibe/.build/arm64-apple-macosx/release/TogkeyVibe.build/SettingsView~partial.swiftmodule",
+    "swift-dependencies": "/Users/katiawheeler/Desktop/mine/vibe/togkey-vibe/app/TogkeyVibe/.build/arm64-apple-macosx/release/TogkeyVibe.build/SettingsView.swiftdeps",
+    "diagnostics": "/Users/katiawheeler/Desktop/mine/vibe/togkey-vibe/app/TogkeyVibe/.build/arm64-apple-macosx/release/TogkeyVibe.build/SettingsView.dia"
+  }
+}

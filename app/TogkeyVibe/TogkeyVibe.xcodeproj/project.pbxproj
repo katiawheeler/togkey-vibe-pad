@@ -1,0 +1,388 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		067AC008370F22B98EF21C19 /* DeviceState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8511F0B67176FD9B3A9287E1 /* DeviceState.swift */; };
+		272ABE5B0F6D8D8D54BBB1BA /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57380D83C8410C968C9F38F0 /* SettingsView.swift */; };
+		2AB88FB86098EF73139E15BD /* VibeMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 190CCAA7F1C67B9044D5341D /* VibeMode.swift */; };
+		49C710E53FD2171081C0444B /* LaunchAtLoginService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E91622F540F3610170A31A11 /* LaunchAtLoginService.swift */; };
+		5052C56A1695BCC76B39BFF7 /* ThinkLevel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20F14A8367F6281BA62EFD81 /* ThinkLevel.swift */; };
+		558744B2CDA0658A5E646213 /* ClaudeCodeBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D0C3A8BDE43AD4AC965AB9E /* ClaudeCodeBridge.swift */; };
+		62ED9961D4790B134D5AE1ED /* VoiceModeService.swift in Sources */ = {isa = PBXBuildFile; fileRef = BED9CF12FCC7CB9A2E34D599 /* VoiceModeService.swift */; };
+		65BF2C936AE6AFCC5B107AE5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5187C0E63F1E6AE447904CCC /* Assets.xcassets */; };
+		68A5398B8DA22AAAF03C8C36 /* MenuBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEFB0799883BFC8FF7462652 /* MenuBarView.swift */; };
+		6B59C70D39E422D818A69562 /* LEDController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 811497CFF5198D72FE45CCBD /* LEDController.swift */; };
+		94F008FF6BDC15670086794B /* TogkeyVibeApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = F31D10C88986BBD69F1979CF /* TogkeyVibeApp.swift */; };
+		BA479ED53ADE7625C74851E0 /* DisplayRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C4C332D9161CF0149147764 /* DisplayRenderer.swift */; };
+		F44FAD8168EED389CEC5F387 /* HIDManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 397F8E93F052E36584C62F5E /* HIDManager.swift */; };
+		F705836AA12390E2566C7891 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99A28B027DA67B3E0F41631E /* AppDelegate.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		190CCAA7F1C67B9044D5341D /* VibeMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VibeMode.swift; sourceTree = "<group>"; };
+		191782C655B61473F55C782B /* TogkeyVibe.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TogkeyVibe.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		20F14A8367F6281BA62EFD81 /* ThinkLevel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThinkLevel.swift; sourceTree = "<group>"; };
+		397F8E93F052E36584C62F5E /* HIDManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HIDManager.swift; sourceTree = "<group>"; };
+		3D0C3A8BDE43AD4AC965AB9E /* ClaudeCodeBridge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClaudeCodeBridge.swift; sourceTree = "<group>"; };
+		4C4C332D9161CF0149147764 /* DisplayRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayRenderer.swift; sourceTree = "<group>"; };
+		5187C0E63F1E6AE447904CCC /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		57380D83C8410C968C9F38F0 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		811497CFF5198D72FE45CCBD /* LEDController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LEDController.swift; sourceTree = "<group>"; };
+		8511F0B67176FD9B3A9287E1 /* DeviceState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceState.swift; sourceTree = "<group>"; };
+		99A28B027DA67B3E0F41631E /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		BED9CF12FCC7CB9A2E34D599 /* VoiceModeService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceModeService.swift; sourceTree = "<group>"; };
+		DEFB0799883BFC8FF7462652 /* MenuBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarView.swift; sourceTree = "<group>"; };
+		E91622F540F3610170A31A11 /* LaunchAtLoginService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchAtLoginService.swift; sourceTree = "<group>"; };
+		F31D10C88986BBD69F1979CF /* TogkeyVibeApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TogkeyVibeApp.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		5CAB609D60C7C79EB7A8B135 = {
+			isa = PBXGroup;
+			children = (
+				9416788BBCF15B643AD22ECB /* App */,
+				F27B7F48BCA7E50814785031 /* Models */,
+				96A12F3C0B648639F32B0519 /* Resources */,
+				9ED9EA0F956223130A2E17A4 /* Services */,
+				6F4F58550B4F1CF31EDA0BE7 /* Views */,
+				CFEC23C99F897D34DB2C8FF5 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		6F4F58550B4F1CF31EDA0BE7 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				DEFB0799883BFC8FF7462652 /* MenuBarView.swift */,
+				57380D83C8410C968C9F38F0 /* SettingsView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		9416788BBCF15B643AD22ECB /* App */ = {
+			isa = PBXGroup;
+			children = (
+				99A28B027DA67B3E0F41631E /* AppDelegate.swift */,
+				F31D10C88986BBD69F1979CF /* TogkeyVibeApp.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		96A12F3C0B648639F32B0519 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				5187C0E63F1E6AE447904CCC /* Assets.xcassets */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		9ED9EA0F956223130A2E17A4 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				3D0C3A8BDE43AD4AC965AB9E /* ClaudeCodeBridge.swift */,
+				4C4C332D9161CF0149147764 /* DisplayRenderer.swift */,
+				397F8E93F052E36584C62F5E /* HIDManager.swift */,
+				E91622F540F3610170A31A11 /* LaunchAtLoginService.swift */,
+				811497CFF5198D72FE45CCBD /* LEDController.swift */,
+				BED9CF12FCC7CB9A2E34D599 /* VoiceModeService.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		CFEC23C99F897D34DB2C8FF5 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				191782C655B61473F55C782B /* TogkeyVibe.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		F27B7F48BCA7E50814785031 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				8511F0B67176FD9B3A9287E1 /* DeviceState.swift */,
+				20F14A8367F6281BA62EFD81 /* ThinkLevel.swift */,
+				190CCAA7F1C67B9044D5341D /* VibeMode.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		BADF24D127C1BD1E32AC8FA6 /* TogkeyVibe */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 0B5D3F9C92E616FD5B89A170 /* Build configuration list for PBXNativeTarget "TogkeyVibe" */;
+			buildPhases = (
+				4CB3DF786190607028BAD25C /* Sources */,
+				A04DC689C7600E379E34A23E /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = TogkeyVibe;
+			packageProductDependencies = (
+			);
+			productName = TogkeyVibe;
+			productReference = 191782C655B61473F55C782B /* TogkeyVibe.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		6C834DFB7FD82F17A83FE718 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1500;
+				TargetAttributes = {
+					BADF24D127C1BD1E32AC8FA6 = {
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = FDDD6CAFFD2F76158EF5E8A8 /* Build configuration list for PBXProject "TogkeyVibe" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = 5CAB609D60C7C79EB7A8B135;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				BADF24D127C1BD1E32AC8FA6 /* TogkeyVibe */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		A04DC689C7600E379E34A23E /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				65BF2C936AE6AFCC5B107AE5 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		4CB3DF786190607028BAD25C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F705836AA12390E2566C7891 /* AppDelegate.swift in Sources */,
+				558744B2CDA0658A5E646213 /* ClaudeCodeBridge.swift in Sources */,
+				067AC008370F22B98EF21C19 /* DeviceState.swift in Sources */,
+				BA479ED53ADE7625C74851E0 /* DisplayRenderer.swift in Sources */,
+				F44FAD8168EED389CEC5F387 /* HIDManager.swift in Sources */,
+				6B59C70D39E422D818A69562 /* LEDController.swift in Sources */,
+				49C710E53FD2171081C0444B /* LaunchAtLoginService.swift in Sources */,
+				68A5398B8DA22AAAF03C8C36 /* MenuBarView.swift in Sources */,
+				272ABE5B0F6D8D8D54BBB1BA /* SettingsView.swift in Sources */,
+				5052C56A1695BCC76B39BFF7 /* ThinkLevel.swift in Sources */,
+				94F008FF6BDC15670086794B /* TogkeyVibeApp.swift in Sources */,
+				2AB88FB86098EF73139E15BD /* VibeMode.swift in Sources */,
+				62ED9961D4790B134D5AE1ED /* VoiceModeService.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		A0EB1573124814033E2603D4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = Resources/TogkeyVibe.entitlements;
+				COMBINE_HIDPI_IMAGES = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = Resources/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks";
+				LSUIElement = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.togkey.vibe;
+				SDKROOT = macosx;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+			};
+			name = Release;
+		};
+		A3F052DB11B20412108518E3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = Resources/TogkeyVibe.entitlements;
+				COMBINE_HIDPI_IMAGES = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = Resources/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks";
+				LSUIElement = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.togkey.vibe;
+				SDKROOT = macosx;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+			};
+			name = Debug;
+		};
+		B4CF8E93E010C1423B89C1D1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MARKETING_VERSION = 1.0.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "Togkey Vibe";
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.9;
+			};
+			name = Debug;
+		};
+		E112340E248834B553042F05 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MARKETING_VERSION = 1.0.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "Togkey Vibe";
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.9;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		0B5D3F9C92E616FD5B89A170 /* Build configuration list for PBXNativeTarget "TogkeyVibe" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A3F052DB11B20412108518E3 /* Debug */,
+				A0EB1573124814033E2603D4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		FDDD6CAFFD2F76158EF5E8A8 /* Build configuration list for PBXProject "TogkeyVibe" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B4CF8E93E010C1423B89C1D1 /* Debug */,
+				E112340E248834B553042F05 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 6C834DFB7FD82F17A83FE718 /* Project object */;
+}
