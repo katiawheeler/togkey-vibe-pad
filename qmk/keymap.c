@@ -227,12 +227,20 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
     if (key_idx >= 0) {
         if (record->event.pressed) {
+            // Key pressed - flash RGB green for feedback
+            #ifdef RGBLIGHT_ENABLE
+            rgblight_setrgb(0, 255, 0);
+            #endif
             // Key pressed
             key_press_timer[key_idx] = timer_read();
             key_held[key_idx] = true;
             long_press_triggered[key_idx] = false;
             send_key_event(key_idx, EVENT_PRESSED);
         } else {
+            // Key released - restore dim white
+            #ifdef RGBLIGHT_ENABLE
+            rgblight_setrgb(64, 64, 64);
+            #endif
             // Key released
             key_held[key_idx] = false;
             if (long_press_triggered[key_idx]) {
@@ -263,15 +271,20 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     return true;
 }
 
-// Encoder callback (handles both rotation and fallback if encoder_map not enabled)
+// Local mode tracking
+static uint8_t local_mode = 0;  // 0=ASK, 1=PLAN, 2=EDITS, 3=ALL
+
+// Encoder callback - cycle modes locally AND send HID event
 bool encoder_update_user(uint8_t index, bool clockwise) {
-    // This is called if ENCODER_MAP_ENABLE is not set
-    // With ENCODER_MAP_ENABLE, rotation is handled via encoder_map
     if (clockwise) {
+        local_mode = (local_mode + 1) % 4;
         send_encoder_event(DIR_CW, 1);
     } else {
+        local_mode = (local_mode + 3) % 4;  // +3 is same as -1 mod 4
         send_encoder_event(DIR_CCW, 1);
     }
+    // Update local display
+    display_set_mode(local_mode);
     return false;
 }
 

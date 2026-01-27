@@ -298,6 +298,11 @@ void display_set_stt(bool enabled) {
 
 #ifdef OLED_ENABLE
 
+// Initialize OLED with correct rotation
+oled_rotation_t oled_init_user(oled_rotation_t rotation) {
+    return OLED_ROTATION_180;
+}
+
 // OLED task - runs every frame
 bool oled_task_user(void) {
     // Always check connection status
