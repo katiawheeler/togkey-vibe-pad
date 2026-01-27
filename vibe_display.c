@@ -110,9 +110,9 @@ static void draw_thinking_animation(void) {
 
     // 8x8 glyph scaled 2x = 16x16 pixels
     // X center: (128 - 16) / 2 = 56
-    // Y: near bottom of 32px display
+    // Y center: (32 - 16) / 2 = 8
     uint8_t start_x = 56;
-    uint8_t start_y = 0;  // Try 0 - might be inverted due to rotation
+    uint8_t start_y = 8;
 
     // Draw 8x8 glyph scaled 2x (16x16 result)
     for (uint8_t col = 0; col < 8; col++) {

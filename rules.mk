@@ -6,6 +6,7 @@ RAW_ENABLE = yes
 
 # Enable encoder support
 ENCODER_ENABLE = yes
+ENCODER_MAP_ENABLE = yes
 
 # Enable RGB LED support (uncomment the appropriate one for your hardware)
 RGBLIGHT_ENABLE = yes
