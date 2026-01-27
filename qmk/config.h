@@ -100,4 +100,4 @@
 // ============================================================
 // Flip display 180 degrees (if screen appears upside down)
 #define OLED_DISPLAY_128X32
-#define OLED_ROTATION OLED_ROTATION_180
+#define OLED_ROTATION OLED_ROTATION_0
