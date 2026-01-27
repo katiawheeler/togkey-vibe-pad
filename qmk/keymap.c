@@ -30,6 +30,9 @@ enum custom_keycodes {
 // RGB party mode state
 static bool rgb_party_mode = false;
 
+// Forward declarations
+static void set_mode_led_color(void);
+
 // HID command definitions (matching protocol)
 #define HID_CMD_ENCODER_EVENT   0x02
 #define HID_CMD_DEVICE_READY    0x03
@@ -199,7 +202,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             } else {
                 unregister_code(KC_RGUI);
                 #ifdef RGBLIGHT_ENABLE
-                if (!rgb_party_mode) rgblight_setrgb(64, 64, 64);
+                if (!rgb_party_mode) set_mode_led_color();
                 #endif
             }
             return false;
@@ -214,7 +217,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 tap_code(KC_ESC);
             } else {
                 #ifdef RGBLIGHT_ENABLE
-                if (!rgb_party_mode) rgblight_setrgb(64, 64, 64);
+                if (!rgb_party_mode) set_mode_led_color();
                 #endif
             }
             return false;
@@ -228,7 +231,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 tap_code(KC_ESC);
             } else {
                 #ifdef RGBLIGHT_ENABLE
-                if (!rgb_party_mode) rgblight_setrgb(64, 64, 64);
+                if (!rgb_party_mode) set_mode_led_color();
                 #endif
             }
             return false;
@@ -252,7 +255,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 SEND_STRING("/clear" SS_TAP(X_ENTER));
             } else {
                 #ifdef RGBLIGHT_ENABLE
-                if (!rgb_party_mode) rgblight_setrgb(64, 64, 64);
+                if (!rgb_party_mode) set_mode_led_color();
                 #endif
             }
             return false;
@@ -266,7 +269,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 SEND_STRING("/compact" SS_TAP(X_ENTER));
             } else {
                 #ifdef RGBLIGHT_ENABLE
-                if (!rgb_party_mode) rgblight_setrgb(64, 64, 64);
+                if (!rgb_party_mode) set_mode_led_color();
                 #endif
             }
             return false;
@@ -282,7 +285,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                     rgblight_set_speed(255);
                 } else {
                     rgblight_mode(RGBLIGHT_MODE_STATIC_LIGHT);
-                    rgblight_setrgb(64, 64, 64);  // Back to dim white
+                    set_mode_led_color();  // Restore mode color
                 }
                 #endif
             }
@@ -310,6 +313,28 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 // Local mode tracking
 static uint8_t local_mode = 0;  // 0=ASK, 1=PLAN, 2=EDITS, 3=ALL
 
+// Set LED color based on current mode
+static void set_mode_led_color(void) {
+    #ifdef RGBLIGHT_ENABLE
+    if (rgb_party_mode) return;  // Don't override party mode
+
+    switch (local_mode) {
+        case 0:  // ASK - Blue
+            rgblight_setrgb(0, 100, 255);
+            break;
+        case 1:  // PLAN - Yellow/Gold
+            rgblight_setrgb(255, 180, 0);
+            break;
+        case 2:  // EDITS - Green
+            rgblight_setrgb(0, 255, 100);
+            break;
+        case 3:  // ALL - White
+            rgblight_setrgb(255, 255, 255);
+            break;
+    }
+    #endif
+}
+
 // Encoder callback - cycle modes locally AND send HID event
 bool encoder_update_user(uint8_t index, bool clockwise) {
     if (clockwise) {
@@ -319,8 +344,9 @@ bool encoder_update_user(uint8_t index, bool clockwise) {
         local_mode = (local_mode + 3) % 4;  // +3 is same as -1 mod 4
         send_encoder_event(DIR_CCW, 1);
     }
-    // Update local display
+    // Update local display and LED
     display_set_mode(local_mode);
+    set_mode_led_color();
     return false;
 }
 
@@ -362,7 +388,7 @@ void check_encoder_push(void) {
                 rgblight_set_speed(255);
             } else {
                 rgblight_mode(RGBLIGHT_MODE_STATIC_LIGHT);
-                rgblight_setrgb(64, 64, 64);
+                set_mode_led_color();  // Restore mode color
             }
             #endif
         }
@@ -415,9 +441,9 @@ void keyboard_post_init_user(void) {
     // Initialize display buffer
     display_init();
 
-    // Set initial LED to dim white (idle/disconnected)
-    set_led_color(64, 64, 64);
+    // Set initial LED to mode color (ASK = blue)
     set_led_pattern(0, 128);  // Solid
+    set_mode_led_color();
 
     // Send device ready message
     send_device_ready();

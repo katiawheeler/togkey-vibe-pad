@@ -64,6 +64,7 @@
 #ifdef RGBLIGHT_ENABLE
     #define RGBLIGHT_EFFECT_BREATHING
     #define RGBLIGHT_EFFECT_RAINBOW_MOOD
+    #define RGBLIGHT_EFFECT_RAINBOW_SWIRL  // For party mode
     #define RGBLIGHT_EFFECT_STATIC_GRADIENT
     #define RGBLIGHT_DEFAULT_HUE 170  // Blue
     #define RGBLIGHT_DEFAULT_SAT 255
@@ -101,3 +102,6 @@
 // Flip display 180 degrees (if screen appears upside down)
 #define OLED_DISPLAY_128X32
 #define OLED_ROTATION OLED_ROTATION_0
+
+// Disable OLED timeout - always display the mode
+#define OLED_TIMEOUT 0
