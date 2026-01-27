@@ -17,7 +17,7 @@ void raw_hid_send(uint8_t *data, uint8_t length);
 // Custom keycodes
 enum custom_keycodes {
     TV_MACWHISPER = SAFE_RANGE,  // Key 1: MacWhisper (Right Command)
-    TV_DBL_ESC,                   // Key 2: Double Escape
+    TV_ENTER,                     // Key 2: Enter key
     TV_STOP,                      // Key 3: Single Escape
     TV_BOOT,                      // Key 4: Bootloader mode
     TV_CLEAR,                     // Key 5: /clear + Enter
@@ -68,7 +68,7 @@ static uint8_t current_pattern = 0;
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [0] = LAYOUT(
         TV_PARTY,                              // Encoder push: RGB party mode
-        TV_MACWHISPER, TV_DBL_ESC, TV_STOP,    // Row 1: MacWhisper, Double ESC, ESC
+        TV_MACWHISPER, TV_ENTER,   TV_STOP,    // Row 1: MacWhisper, Enter, ESC
         TV_BOOT,       TV_CLEAR,   TV_COMPACT  // Row 2: Bootloader, /clear, /compact
     )
 };
@@ -207,14 +207,13 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             }
             return false;
 
-        case TV_DBL_ESC:
-            // Key 2: Double Escape
+        case TV_ENTER:
+            // Key 2: Enter key
             if (record->event.pressed) {
                 #ifdef RGBLIGHT_ENABLE
                 rgblight_setrgb(255, 128, 0);  // Orange feedback
                 #endif
-                tap_code(KC_ESC);
-                tap_code(KC_ESC);
+                tap_code(KC_ENT);
             } else {
                 #ifdef RGBLIGHT_ENABLE
                 if (!rgb_party_mode) set_mode_led_color();
@@ -335,7 +334,7 @@ static void set_mode_led_color(void) {
     #endif
 }
 
-// Encoder callback - cycle modes locally AND send HID event
+// Encoder callback - cycle modes locally, send HID event, AND send Shift+Tab
 bool encoder_update_user(uint8_t index, bool clockwise) {
     if (clockwise) {
         local_mode = (local_mode + 1) % 4;
@@ -344,6 +343,12 @@ bool encoder_update_user(uint8_t index, bool clockwise) {
         local_mode = (local_mode + 3) % 4;  // +3 is same as -1 mod 4
         send_encoder_event(DIR_CCW, 1);
     }
+
+    // Send Shift+Tab to change mode in Claude Code
+    register_code(KC_LSFT);
+    tap_code(KC_TAB);
+    unregister_code(KC_LSFT);
+
     // Update local display and LED
     display_set_mode(local_mode);
     set_mode_led_color();
