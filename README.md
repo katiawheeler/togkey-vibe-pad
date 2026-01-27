@@ -9,46 +9,40 @@ Transform your [Togkey Pad Plus](https://togkey.com/products/togkey-pad-plus-cus
 ## Features
 
 ### Mode Control (Rotary Encoder)
-- **Rotate** to cycle through Claude Code modes:
+- **Rotate** to cycle through Claude Code modes via Shift+Tab:
   - **Ask** (Blue) - Permission-based interactions
-  - **Plan** (Yellow) - Architecture and design mode
-  - **Accept Edits** (Orange) - Auto-accept file changes
-  - **Accept All** (Green) - Full vibe mode
-- **Push** to toggle voice input (STT)
+  - **Plan** (Yellow/Gold) - Architecture and design mode
+  - **Accept Edits** (Green) - Auto-accept file changes
+  - **Accept All** (White) - Full vibe mode
+- **Push** to toggle RGB party mode + type "claude"
 
 ### Key Functions (6 Keys + Encoder Button)
 
 ```
         [Encoder]
-           STT
+      Party Mode
+     + "claude"
 ┌─────────┬─────────┬─────────┐
-│  Think  │  Clear  │  Undo   │
-│  Cycle  │  /clear │  /undo  │
+│   Mac   │  Enter  │  Escape │
+│ Whisper │         │  Stop   │
 ├─────────┼─────────┼─────────┤
-│ Resume  │ Commit  │ Escape  │
-│ /resume │ /commit │  Stop   │
+│ /resume │ /clear  │/compact │
+│         │         │         │
 └─────────┴─────────┴─────────┘
 ```
 
-| Key | Short Press | Long Press |
-|-----|-------------|------------|
-| Encoder Push | Toggle STT | - |
-| Think Cycle | Cycle thinking depth | - |
-| Clear | Clear conversation | - |
-| Undo | Undo last change | - |
-| Resume | Resume task | - |
-| Commit | Git commit | Create PR |
-| Escape | Send Escape | Ctrl+C |
-
-### Think Levels
-Cycle through thinking depths:
-- **Off** - Normal prompts
-- **Lite** - "think about"
-- **Medium** - "think step by step"
-- **Hard** - "ultrathink"
+| Key | Function | Feedback Color |
+|-----|----------|----------------|
+| Encoder Push | RGB party mode + type "claude" | Rainbow |
+| Key 1 (Top Left) | MacWhisper STT (Right Command) | Cyan |
+| Key 2 (Top Center) | Enter | Orange |
+| Key 3 (Top Right) | Escape | Red |
+| Key 4 (Bottom Left) | Type `/resume` | Yellow |
+| Key 5 (Bottom Center) | Type `/clear` | Green |
+| Key 6 (Bottom Right) | Type `/compact` | Purple |
 
 ### Visual Feedback
-- **Display**: Real-time mode, STT status, and last action (if OLED equipped)
+- **Display**: Claude thinking animation (cycling glyphs)
 - **LED**: Color-coded modes with animated patterns
 
 ## Quick Start
@@ -93,7 +87,7 @@ This creates `~/qmk_firmware/togkey_padplus_vibe.uf2`
 
 The Togkey Pad Plus uses an RP2040 chip. To flash:
 
-1. **Enter bootloader mode**: Hold the encoder button while plugging in USB
+1. **Enter bootloader mode**: Hold Key 1 (top-left MacWhisper key) while plugging in USB
    - The device will mount as a USB drive called `RPI-RP2`
 
 2. **Copy the firmware**:
@@ -159,16 +153,13 @@ togkey-vibe/
 
 ## LED States
 
-| State | Color | Pattern |
-|-------|-------|---------|
-| Ask Mode | Blue | Solid |
-| Plan Mode | Yellow | Solid |
-| Accept Edits | Orange | Solid |
-| Accept All | Green | Solid |
-| Voice Active | Purple | Pulsing |
-| Processing | White | Breathing |
-| Error | Red | Flashing |
-| Disconnected | Dim White | Solid |
+| State | Color | RGB Values |
+|-------|-------|------------|
+| Ask Mode | Blue | (0, 100, 255) |
+| Plan Mode | Yellow/Gold | (255, 180, 0) |
+| Accept Edits | Green | (0, 255, 100) |
+| Accept All | White | (255, 255, 255) |
+| Party Mode | Rainbow | Cycling animation |
 
 ## How It Works
 
@@ -215,7 +206,7 @@ swift run
 You need to install the Togkey keyboard definition first. See step 2 above.
 
 ### Device not entering bootloader mode
-Try holding the encoder button **before** plugging in USB. Some units have a small reset button on the PCB.
+Try holding Key 1 (top-left key) **before** plugging in USB. Some units have a small reset button on the PCB.
 
 ### RPI-RP2 drive is read-only
 Try a different USB port or cable. On macOS, you may need to drag the file via Finder instead of using `cp`.
