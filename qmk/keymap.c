@@ -14,32 +14,23 @@
 void raw_hid_send(uint8_t *data, uint8_t length);
 #endif
 
-// Key indices (matching HID protocol)
-enum key_indices {
-    KEY_THINK_CYCLE = 0,
-    KEY_CLEAR_CHAT = 1,
-    KEY_UNDO_CHANGE = 2,
-    KEY_RESUME_TASK = 3,
-    KEY_COMMIT_PR = 4,
-    KEY_ESCAPE_STOP = 5,
-    KEY_ENCODER_PUSH = 6
-};
-
 // Custom keycodes
 enum custom_keycodes {
-    TV_THINK = SAFE_RANGE,  // Think cycle
-    TV_CLEAR,               // Clear chat
-    TV_UNDO,                // Undo change
-    TV_RESUME,              // Resume task
-    TV_COMMIT,              // Commit / PR (long press)
-    TV_STOP,                // Escape / Stop
-    TV_STT,                 // STT toggle (encoder push)
-    TV_MODE_CW,             // Mode clockwise
-    TV_MODE_CCW             // Mode counter-clockwise
+    TV_MACWHISPER = SAFE_RANGE,  // Key 1: MacWhisper (Right Command)
+    TV_DBL_ESC,                   // Key 2: Double Escape
+    TV_STOP,                      // Key 3: Single Escape
+    TV_BOOT,                      // Key 4: Bootloader mode
+    TV_CLEAR,                     // Key 5: /clear + Enter
+    TV_COMPACT,                   // Key 6: /compact + Enter
+    TV_PARTY,                     // Encoder push: RGB party mode
+    TV_MODE_CW,                   // Mode clockwise
+    TV_MODE_CCW                   // Mode counter-clockwise
 };
 
+// RGB party mode state
+static bool rgb_party_mode = false;
+
 // HID command definitions (matching protocol)
-#define HID_CMD_KEY_EVENT       0x01
 #define HID_CMD_ENCODER_EVENT   0x02
 #define HID_CMD_DEVICE_READY    0x03
 #define HID_CMD_HEARTBEAT       0x04
@@ -52,20 +43,9 @@ enum custom_keycodes {
 #define HID_CMD_DISPLAY_FOOTER  0x15
 #define HID_CMD_PING_RESPONSE   0x1F
 
-// Event types
-#define EVENT_RELEASED          0x00
-#define EVENT_PRESSED           0x01
-#define EVENT_LONG_PRESS_START  0x02
-#define EVENT_LONG_PRESS_END    0x03
-
 // Direction
 #define DIR_CCW                 0x00
 #define DIR_CW                  0x01
-
-// Long press tracking
-static uint16_t key_press_timer[7] = {0};
-static bool key_held[7] = {false};
-static bool long_press_triggered[7] = {false};
 
 // Heartbeat timer
 static uint32_t last_heartbeat = 0;
@@ -78,11 +58,15 @@ static uint8_t current_pattern = 0;
 
 // Keymap
 // Layout: encoder button, then 6 keys in 2x3 grid
+// Physical layout:
+//        [ENCODER]              ← push + dial
+// [KEY1]  [KEY2]  [KEY3]        ← top row
+// [KEY4]  [KEY5]  [KEY6]        ← bottom row
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [0] = LAYOUT(
-        TV_STT,                          // Encoder push (matrix position 0,2)
-        TV_THINK,  TV_CLEAR,  TV_UNDO,   // Row 1
-        TV_RESUME, TV_COMMIT, TV_STOP    // Row 2
+        TV_PARTY,                              // Encoder push: RGB party mode
+        TV_MACWHISPER, TV_DBL_ESC, TV_STOP,    // Row 1: MacWhisper, Double ESC, ESC
+        TV_BOOT,       TV_CLEAR,   TV_COMPACT  // Row 2: Bootloader, /clear, /compact
     )
 };
 
@@ -102,12 +86,6 @@ static void send_hid_report(uint8_t cmd, uint8_t *payload, uint8_t len) {
         memcpy(&report[2], payload, len);
     }
     raw_hid_send(report, RAW_EPSIZE);
-}
-
-// Send key event
-static void send_key_event(uint8_t key_idx, uint8_t event_type) {
-    uint8_t payload[2] = {key_idx, event_type};
-    send_hid_report(HID_CMD_KEY_EVENT, payload, 2);
 }
 
 // Send encoder event
@@ -207,68 +185,126 @@ void raw_hid_receive(uint8_t *data, uint8_t length) {
     }
 }
 
-// Get key index from keycode
-static int8_t get_key_index(uint16_t keycode) {
-    switch (keycode) {
-        case TV_THINK:  return KEY_THINK_CYCLE;
-        case TV_CLEAR:  return KEY_CLEAR_CHAT;
-        case TV_UNDO:   return KEY_UNDO_CHANGE;
-        case TV_RESUME: return KEY_RESUME_TASK;
-        case TV_COMMIT: return KEY_COMMIT_PR;
-        case TV_STOP:   return KEY_ESCAPE_STOP;
-        case TV_STT:    return KEY_ENCODER_PUSH;
-        default:        return -1;
-    }
-}
-
 // Process custom keycodes
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-    int8_t key_idx = get_key_index(keycode);
-
-    if (key_idx >= 0) {
-        if (record->event.pressed) {
-            // Key pressed - flash RGB green for feedback
-            #ifdef RGBLIGHT_ENABLE
-            rgblight_setrgb(0, 255, 0);
-            #endif
-            // Key pressed
-            key_press_timer[key_idx] = timer_read();
-            key_held[key_idx] = true;
-            long_press_triggered[key_idx] = false;
-            send_key_event(key_idx, EVENT_PRESSED);
-        } else {
-            // Key released - restore dim white
-            #ifdef RGBLIGHT_ENABLE
-            rgblight_setrgb(64, 64, 64);
-            #endif
-            // Key released
-            key_held[key_idx] = false;
-            if (long_press_triggered[key_idx]) {
-                send_key_event(key_idx, EVENT_LONG_PRESS_END);
+    // Handle specific key actions
+    switch (keycode) {
+        case TV_MACWHISPER:
+            // Key 1: Send Right Command (MacWhisper STT toggle)
+            if (record->event.pressed) {
+                #ifdef RGBLIGHT_ENABLE
+                rgblight_setrgb(0, 255, 255);  // Cyan feedback
+                #endif
+                register_code(KC_RGUI);
             } else {
-                send_key_event(key_idx, EVENT_RELEASED);
+                unregister_code(KC_RGUI);
+                #ifdef RGBLIGHT_ENABLE
+                if (!rgb_party_mode) rgblight_setrgb(64, 64, 64);
+                #endif
             }
-            long_press_triggered[key_idx] = false;
-        }
-        return false;
-    }
+            return false;
 
-    // Encoder rotation events
-    if (keycode == TV_MODE_CW) {
-        if (record->event.pressed) {
-            send_encoder_event(DIR_CW, 1);
-        }
-        return false;
-    }
+        case TV_DBL_ESC:
+            // Key 2: Double Escape
+            if (record->event.pressed) {
+                #ifdef RGBLIGHT_ENABLE
+                rgblight_setrgb(255, 128, 0);  // Orange feedback
+                #endif
+                tap_code(KC_ESC);
+                tap_code(KC_ESC);
+            } else {
+                #ifdef RGBLIGHT_ENABLE
+                if (!rgb_party_mode) rgblight_setrgb(64, 64, 64);
+                #endif
+            }
+            return false;
 
-    if (keycode == TV_MODE_CCW) {
-        if (record->event.pressed) {
-            send_encoder_event(DIR_CCW, 1);
-        }
-        return false;
-    }
+        case TV_STOP:
+            // Key 3: Single Escape
+            if (record->event.pressed) {
+                #ifdef RGBLIGHT_ENABLE
+                rgblight_setrgb(255, 0, 0);  // Red feedback
+                #endif
+                tap_code(KC_ESC);
+            } else {
+                #ifdef RGBLIGHT_ENABLE
+                if (!rgb_party_mode) rgblight_setrgb(64, 64, 64);
+                #endif
+            }
+            return false;
 
-    return true;
+        case TV_BOOT:
+            // Key 4: Enter bootloader mode
+            if (record->event.pressed) {
+                #ifdef RGBLIGHT_ENABLE
+                rgblight_setrgb(255, 255, 255);  // White flash before reboot
+                #endif
+                reset_keyboard();
+            }
+            return false;
+
+        case TV_CLEAR:
+            // Key 5: Type /clear + Enter
+            if (record->event.pressed) {
+                #ifdef RGBLIGHT_ENABLE
+                rgblight_setrgb(0, 255, 0);  // Green feedback
+                #endif
+                SEND_STRING("/clear" SS_TAP(X_ENTER));
+            } else {
+                #ifdef RGBLIGHT_ENABLE
+                if (!rgb_party_mode) rgblight_setrgb(64, 64, 64);
+                #endif
+            }
+            return false;
+
+        case TV_COMPACT:
+            // Key 6: Type /compact + Enter
+            if (record->event.pressed) {
+                #ifdef RGBLIGHT_ENABLE
+                rgblight_setrgb(128, 0, 255);  // Purple feedback
+                #endif
+                SEND_STRING("/compact" SS_TAP(X_ENTER));
+            } else {
+                #ifdef RGBLIGHT_ENABLE
+                if (!rgb_party_mode) rgblight_setrgb(64, 64, 64);
+                #endif
+            }
+            return false;
+
+        case TV_PARTY:
+            // Encoder push: Toggle RGB party mode
+            if (record->event.pressed) {
+                rgb_party_mode = !rgb_party_mode;
+                #ifdef RGBLIGHT_ENABLE
+                if (rgb_party_mode) {
+                    rgblight_enable();
+                    rgblight_mode(RGBLIGHT_MODE_RAINBOW_SWIRL + 2);  // Fast rainbow swirl
+                    rgblight_set_speed(255);
+                } else {
+                    rgblight_mode(RGBLIGHT_MODE_STATIC_LIGHT);
+                    rgblight_setrgb(64, 64, 64);  // Back to dim white
+                }
+                #endif
+            }
+            return false;
+
+        case TV_MODE_CW:
+            // Encoder clockwise
+            if (record->event.pressed) {
+                send_encoder_event(DIR_CW, 1);
+            }
+            return false;
+
+        case TV_MODE_CCW:
+            // Encoder counter-clockwise
+            if (record->event.pressed) {
+                send_encoder_event(DIR_CCW, 1);
+            }
+            return false;
+
+        default:
+            return true;
+    }
 }
 
 // Local mode tracking
@@ -317,20 +353,18 @@ void check_encoder_push(void) {
         encoder_push_state = current_state;
 
         if (encoder_push_state) {
-            // Pressed
-            key_press_timer[KEY_ENCODER_PUSH] = timer_read();
-            key_held[KEY_ENCODER_PUSH] = true;
-            long_press_triggered[KEY_ENCODER_PUSH] = false;
-            send_key_event(KEY_ENCODER_PUSH, EVENT_PRESSED);
-        } else {
-            // Released
-            key_held[KEY_ENCODER_PUSH] = false;
-            if (long_press_triggered[KEY_ENCODER_PUSH]) {
-                send_key_event(KEY_ENCODER_PUSH, EVENT_LONG_PRESS_END);
+            // Pressed - toggle RGB party mode
+            rgb_party_mode = !rgb_party_mode;
+            #ifdef RGBLIGHT_ENABLE
+            if (rgb_party_mode) {
+                rgblight_enable();
+                rgblight_mode(RGBLIGHT_MODE_RAINBOW_SWIRL + 2);
+                rgblight_set_speed(255);
             } else {
-                send_key_event(KEY_ENCODER_PUSH, EVENT_RELEASED);
+                rgblight_mode(RGBLIGHT_MODE_STATIC_LIGHT);
+                rgblight_setrgb(64, 64, 64);
             }
-            long_press_triggered[KEY_ENCODER_PUSH] = false;
+            #endif
         }
     }
 }
@@ -352,22 +386,12 @@ void check_encoder_switch_matrix(void) {
 }
 #endif
 
-// Matrix scan - check for long presses, encoder push, heartbeat, and display
+// Matrix scan - check encoder push, heartbeat, and display
 void matrix_scan_user(void) {
     // Check encoder push button if using GPIO
     #ifdef ENCODER_PUSH_PIN
     check_encoder_push();
     #endif
-
-    // Check for long press on all keys
-    for (int i = 0; i < 7; i++) {
-        if (key_held[i] && !long_press_triggered[i]) {
-            if (timer_elapsed(key_press_timer[i]) > LONG_PRESS_DELAY) {
-                long_press_triggered[i] = true;
-                send_key_event(i, EVENT_LONG_PRESS_START);
-            }
-        }
-    }
 
     // Send heartbeat periodically
     if (timer_elapsed32(last_heartbeat) > HEARTBEAT_INTERVAL) {
