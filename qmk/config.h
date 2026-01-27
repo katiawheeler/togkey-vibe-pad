@@ -88,6 +88,14 @@
 #define FIRMWARE_VERSION_PATCH 0
 
 // ============================================================
+// BOOTMAGIC CONFIGURATION
+// ============================================================
+// Hold this key while plugging in USB to enter bootloader
+// Using matrix position [1,0] = top-left key of 2x3 grid (THINK key)
+#define BOOTMAGIC_ROW 1
+#define BOOTMAGIC_COLUMN 0
+
+// ============================================================
 // OLED CONFIGURATION
 // ============================================================
 // Flip display 180 degrees (if screen appears upside down)
