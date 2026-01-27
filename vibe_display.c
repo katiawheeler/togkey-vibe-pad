@@ -115,9 +115,9 @@ static void draw_thinking_animation(void) {
 
     // Center the 16x16 glyph on 128x32 display
     // X center: (128 - 16) / 2 = 56
-    // Y: moved down from center (was 8, now 12)
+    // Y: moved down (was 8, now 16)
     uint8_t start_x = 56;
-    uint8_t start_y = 12;
+    uint8_t start_y = 16;
 
     // Draw the glyph scaled up 2x for better visibility (32x32 would be too big, so 16x16)
     for (uint8_t col = 0; col < 16; col++) {
