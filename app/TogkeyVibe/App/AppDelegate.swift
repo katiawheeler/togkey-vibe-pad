@@ -20,6 +20,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
 
     private var cancellables = Set<AnyCancellable>()
     private var displayUpdateTimer: Timer?
+    private var lastDisplayContent: DisplayContent?
 
     // MARK: - Application Lifecycle
 
@@ -34,8 +35,11 @@ final class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
     }
 
     func applicationWillTerminate(_ notification: Notification) {
-        hidManager.stop()
         displayUpdateTimer?.invalidate()
+        displayUpdateTimer = nil
+        hidManager.stop()
+        claudeCodeBridge.stop()
+        voiceModeService.stop()
     }
 
     // MARK: - Setup
@@ -98,10 +102,26 @@ final class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
     private func sendDisplayUpdate() {
         let content = displayRenderer.renderDisplay(state: deviceState)
 
-        hidManager.sendDisplayHeader(content.header)
-        hidManager.sendDisplayLine1(content.line1)
-        hidManager.sendDisplayLine2(content.line2)
-        hidManager.sendDisplayFooter(content.footer)
+        // Skip HID commands if nothing changed
+        if let last = lastDisplayContent, !content.hasChanged(from: last) {
+            return
+        }
+
+        // Only send lines that actually changed
+        if lastDisplayContent?.header != content.header {
+            hidManager.sendDisplayHeader(content.header)
+        }
+        if lastDisplayContent?.line1 != content.line1 {
+            hidManager.sendDisplayLine1(content.line1)
+        }
+        if lastDisplayContent?.line2 != content.line2 {
+            hidManager.sendDisplayLine2(content.line2)
+        }
+        if lastDisplayContent?.footer != content.footer {
+            hidManager.sendDisplayFooter(content.footer)
+        }
+
+        lastDisplayContent = content
 
         // Update local state for preview
         deviceState.displayHeader = content.header

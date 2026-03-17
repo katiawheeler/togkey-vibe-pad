@@ -47,7 +47,13 @@ final class ClaudeCodeBridge: ObservableObject {
     }
 
     deinit {
+        stop()
+    }
+
+    /// Stop monitoring and clean up resources
+    func stop() {
         processMonitorTimer?.invalidate()
+        processMonitorTimer = nil
     }
 
     // MARK: - Public Methods

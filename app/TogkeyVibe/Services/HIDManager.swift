@@ -133,7 +133,16 @@ final class HIDManager: ObservableObject {
         heartbeatTimer?.invalidate()
         heartbeatTimer = nil
 
+        // Cancel all pending retries
+        pendingRetries.forEach { $0.cancel() }
+        pendingRetries.removeAll()
+
         if let manager = hidManager {
+            // Unregister callbacks before closing to prevent dangling references
+            IOHIDManagerRegisterDeviceMatchingCallback(manager, nil, nil)
+            IOHIDManagerRegisterDeviceRemovalCallback(manager, nil, nil)
+            IOHIDManagerRegisterInputReportCallback(manager, nil, nil)
+
             IOHIDManagerClose(manager, IOOptionBits(kIOHIDOptionsTypeNone))
             IOHIDManagerUnscheduleFromRunLoop(
                 manager,
@@ -401,6 +410,7 @@ final class HIDManager: ObservableObject {
     private var consecutiveErrors: Int = 0
     private let maxRetries: Int = 3
     private let retryDelay: TimeInterval = 0.1
+    private var pendingRetries: [DispatchWorkItem] = []
 
     /// Send HID report with retry logic
     private func sendReport(_ report: [UInt8]) {
@@ -438,10 +448,12 @@ final class HIDManager: ObservableObject {
         // Check if we should retry
         if attempt < maxRetries {
             // Retry after a short delay
-            DispatchQueue.global(qos: .userInitiated).asyncAfter(deadline: .now() + retryDelay) { [weak self] in
+            let workItem = DispatchWorkItem { [weak self] in
                 guard let self = self, self.connectedDevice === device else { return }
                 self.sendReportWithRetry(report, device: device, attempt: attempt + 1)
             }
+            pendingRetries.append(workItem)
+            DispatchQueue.global(qos: .userInitiated).asyncAfter(deadline: .now() + retryDelay, execute: workItem)
         } else {
             // Max retries exceeded
             print("HID report failed after \(maxRetries) attempts")
@@ -523,6 +535,7 @@ final class HIDManager: ObservableObject {
     }
 
     private func startHeartbeatMonitor() {
+        heartbeatTimer?.invalidate()
         heartbeatTimer = Timer.scheduledTimer(withTimeInterval: 5.0, repeats: true) { [weak self] _ in
             self?.checkHeartbeat()
         }

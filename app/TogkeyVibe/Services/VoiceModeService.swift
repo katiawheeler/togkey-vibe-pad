@@ -53,7 +53,14 @@ final class VoiceModeService: ObservableObject {
     }
 
     deinit {
+        stop()
+    }
+
+    /// Stop monitoring and clean up resources
+    func stop() {
         statusCheckTimer?.invalidate()
+        statusCheckTimer = nil
+        urlSession.invalidateAndCancel()
     }
 
     // MARK: - Public Methods
@@ -333,6 +340,7 @@ final class VoiceModeService: ObservableObject {
     }
 
     private func startStatusMonitor() {
+        statusCheckTimer?.invalidate()
         statusCheckTimer = Timer.scheduledTimer(withTimeInterval: 5.0, repeats: true) { [weak self] _ in
             self?.checkServerStatus()
         }
