@@ -4,8 +4,6 @@
 
 Transform your [Togkey Pad Plus](https://togkey.com/products/togkey-pad-plus-custom-qmk-macropad) macropad into a dedicated Claude Code controller for the ultimate vibe coding experience.
 
-![Togkey Vibe](docs/hero.png)
-
 ## Features
 
 ### Mode Control (Rotary Encoder)
